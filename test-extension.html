@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stealth AI Extension Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #5a67d8;
+        }
+        .log {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+            border: 1px solid #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Stealth AI Extension Test</h1>
+        <p>This page helps test if the Stealth AI Interview Assistant extension is working properly.</p>
+        
+        <div class="test-section">
+            <h3>1. Extension Detection</h3>
+            <div id="extensionStatus" class="status info">Checking extension...</div>
+            <button onclick="checkExtension()">Check Extension</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>2. Payment Status</h3>
+            <div id="paymentStatus" class="status info">Checking payment status...</div>
+            <button onclick="checkPayment()">Check Payment</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>3. Voice Recognition Test</h3>
+            <div id="voiceStatus" class="status info">Ready to test voice recognition</div>
+            <button onclick="testVoice()">Test Voice Recognition</button>
+            <button onclick="clearVoiceLog()">Clear Log</button>
+            <div id="voiceLog" class="log" style="display: none;">
+                <strong>Voice Recognition Log:</strong>
+                <div id="voiceLogContent"></div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>4. Console Logs</h3>
+            <p>Open browser console (F12) to see detailed logs from the extension.</p>
+            <button onclick="openConsole()">Open Console</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>5. Extension Commands</h3>
+            <p>Try these keyboard shortcuts:</p>
+            <ul>
+                <li><strong>Ctrl+Shift+Y</strong> - Toggle voice listening</li>
+                <li><strong>Ctrl+Shift+M</strong> - Request microphone permission</li>
+                <li><strong>Ctrl+Shift+T</strong> - Test voice recognition</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            console.log(`[Stealth AI Test] ${message}`);
+            
+            const timestamp = new Date().toLocaleTimeString();
+            const logDiv = document.getElementById('voiceLogContent');
+            if (logDiv) {
+                logDiv.innerHTML += `[${timestamp}] ${message}<br>`;
+                logDiv.scrollTop = logDiv.scrollHeight;
+            }
+        }
+
+        function updateStatus(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = message;
+                element.className = `status ${type}`;
+            }
+        }
+
+        function checkExtension() {
+            log('Checking if extension is installed...');
+            
+            // Try to detect the extension
+            if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.id) {
+                updateStatus('extensionStatus', '✅ Extension detected!', 'success');
+                log('Extension detected successfully');
+            } else {
+                updateStatus('extensionStatus', '❌ Extension not detected', 'error');
+                log('Extension not detected - make sure it\'s installed');
+            }
+        }
+
+        function checkPayment() {
+            log('Checking payment status...');
+            
+            if (typeof chrome !== 'undefined' && chrome.storage) {
+                chrome.storage.local.get(['paid'], (result) => {
+                    if (result.paid) {
+                        updateStatus('paymentStatus', '✅ Payment completed - Extension activated!', 'success');
+                        log('Payment status: PAID');
+                    } else {
+                        updateStatus('paymentStatus', '❌ Payment required - Please complete payment', 'error');
+                        log('Payment status: NOT PAID');
+                    }
+                });
+            } else {
+                updateStatus('paymentStatus', '❌ Cannot check payment - Extension not available', 'error');
+                log('Cannot check payment - extension not available');
+            }
+        }
+
+        function testVoice() {
+            log('Testing voice recognition...');
+            document.getElementById('voiceLog').style.display = 'block';
+            
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                updateStatus('voiceStatus', '❌ Speech recognition not supported', 'error');
+                log('ERROR: Speech recognition not supported in this browser');
+                return;
+            }
+
+            updateStatus('voiceStatus', '🎤 Testing voice recognition...', 'info');
+            
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = () => {
+                log('Voice recognition started');
+                updateStatus('voiceStatus', '🎤 Listening... Speak now!', 'info');
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                log(`Voice detected: "${transcript}"`);
+                updateStatus('voiceStatus', `✅ Heard: "${transcript}"`, 'success');
+            };
+
+            recognition.onerror = (event) => {
+                log(`Voice recognition error: ${event.error}`);
+                updateStatus('voiceStatus', `❌ Error: ${event.error}`, 'error');
+            };
+
+            recognition.onend = () => {
+                log('Voice recognition ended');
+            };
+
+            try {
+                recognition.start();
+                log('Starting voice recognition test...');
+            } catch (error) {
+                log(`Failed to start voice recognition: ${error.message}`);
+                updateStatus('voiceStatus', `❌ Failed to start: ${error.message}`, 'error');
+            }
+        }
+
+        function clearVoiceLog() {
+            const logContent = document.getElementById('voiceLogContent');
+            if (logContent) {
+                logContent.innerHTML = '';
+            }
+            log('Voice log cleared');
+        }
+
+        function openConsole() {
+            // This will show instructions to open console
+            alert('Press F12 or right-click and select "Inspect" to open the browser console.');
+        }
+
+        // Auto-check on page load
+        window.addEventListener('load', () => {
+            log('Test page loaded');
+            setTimeout(() => {
+                checkExtension();
+                checkPayment();
+            }, 1000);
+        });
+
+        // Listen for messages from extension
+        if (typeof chrome !== 'undefined' && chrome.runtime) {
+            chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+                log(`Received message from extension: ${request.action}`);
+                if (request.transcript) {
+                    log(`Voice transcript: "${request.transcript}"`);
+                }
+            });
+        }
+    </script>
+</body>
+</html> 

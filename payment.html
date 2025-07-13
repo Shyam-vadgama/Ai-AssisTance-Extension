@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stealth AI Interview Assistant - Payment</title>
+    <link rel="stylesheet" href="payment.css">
+</head>
+<body>
+    <div class="container">
+        <div class="payment-card">
+            <div class="header">
+                <div class="logo">
+                    <div class="logo-icon">🤖</div>
+                </div>
+                <h1>Stealth AI Interview Assistant</h1>
+                <p class="subtitle">Gemini Pro Edition</p>
+            </div>
+
+            <div class="features">
+                <h2>What you get:</h2>
+                <ul>
+                    <li>✅ Real-time voice question detection</li>
+                    <li>✅ AI-powered answer generation</li>
+                    <li>✅ Automatic clipboard copying</li>
+                    <li>✅ Completely stealth mode</li>
+                    <li>✅ Works on Google Meet</li>
+                    <li>✅ One-time payment, lifetime access</li>
+                </ul>
+            </div>
+
+            <div class="payment-section">
+                <div class="price">
+                    <span class="currency">$</span>
+                    <span class="amount">5</span>
+                    <span class="period">one-time</span>
+                </div>
+                
+                <div class="api-key-section">
+                    <label for="apiKey">Gemini API Key:</label>
+                    <input type="password" id="apiKey" placeholder="Enter your Gemini API key" />
+                    <small>Get your free API key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></small>
+                </div>
+
+                <button id="payButton" class="pay-button">
+                    <span class="button-text">Pay $5 & Activate</span>
+                    <span class="button-icon">💳</span>
+                </button>
+                <button id="testApiButton" class="test-button">
+                    <span class="button-text">Test API Key</span>
+                    <span class="button-icon">🧪</span>
+                </button>
+            </div>
+
+            <div class="footer">
+                <p>🔒 Secure payment powered by Razorpay</p>
+                <p>📧 Support: support@stealthai.com</p>
+            </div>
+        </div>
+
+        <div id="loadingOverlay" class="loading-overlay hidden">
+            <div class="loading-spinner"></div>
+            <p id="loadingMessage">Processing payment...</p>
+        </div>
+
+        <div id="successMessage" class="success-message hidden">
+            <div class="success-icon">✅</div>
+            <h2>Payment Successful!</h2>
+            <p>Your Stealth AI Interview Assistant is now activated.</p>
+            <p>Go to Google Meet and press <strong>Ctrl+Shift+Y</strong> to start listening.</p>
+            <button id="closeButton" class="close-button">Close</button>
+        </div>
+    </div>
+
+    <script src="payment.js"></script>
+</body>
+</html> 

@@ -1,0 +1,51 @@
+{
+  "name": "stealth-ai-interview-assistant",
+  "version": "1.0.0",
+  "description": "AI-powered interview assistant Chrome extension with stealth mode",
+  "main": "service_worker.js",
+  "scripts": {
+    "build": "echo 'No build process required for Chrome extension'",
+    "test": "echo 'No tests specified'",
+    "lint": "echo 'No linter configured'",
+    "package": "zip -r stealth-ai-assistant.zip . -x '*.git*' 'node_modules/*' '*.DS_Store'"
+  },
+  "keywords": [
+    "chrome-extension",
+    "interview-assistant",
+    "ai",
+    "gemini",
+    "voice-recognition",
+    "stealth-mode"
+  ],
+  "author": "Stealth AI Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/stealth-ai-interview-assistant.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/stealth-ai-interview-assistant/issues"
+  },
+  "homepage": "https://github.com/yourusername/stealth-ai-interview-assistant#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "devDependencies": {},
+  "dependencies": {},
+  "manifest": {
+    "version": 3,
+    "permissions": [
+      "scripting",
+      "storage",
+      "activeTab",
+      "clipboardWrite",
+      "tabs",
+      "tabCapture",
+      "audioCapture"
+    ],
+    "host_permissions": [
+      "https://meet.google.com/*",
+      "https://generativelanguage.googleapis.com/*"
+    ]
+  }
+} 
