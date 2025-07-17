@@ -21,7 +21,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/stealth-ai-interview-assistant.git"
+    "url": "git+https://github.com/yourusername/stealth-ai-interview-assistant.git"
   },
   "bugs": {
     "url": "https://github.com/yourusername/stealth-ai-interview-assistant/issues"
@@ -30,8 +30,6 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "devDependencies": {},
-  "dependencies": {},
   "manifest": {
     "version": 3,
     "permissions": [
@@ -47,5 +45,12 @@
       "https://meet.google.com/*",
       "https://generativelanguage.googleapis.com/*"
     ]
+  },
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.10.0",
+    "form-data": "^4.0.4",
+    "fs": "^0.0.1-security",
+    "node-record-lpcm16": "^1.0.1"
   }
-} 
+}
