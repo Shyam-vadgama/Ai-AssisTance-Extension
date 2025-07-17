@@ -12,12 +12,25 @@ class PopupHandler {
         this.payButton = document.getElementById('payButton');
         this.toggleButton = document.getElementById('toggleButton');
         this.testButton = document.getElementById('testButton');
+        // Chatbot elements
+        this.chatContainer = document.getElementById('chatContainer');
+        this.chatInput = document.getElementById('chatInput');
+        this.sendChatBtn = document.getElementById('sendChatBtn');
+        this.isPaid = false;
+        // Load chat history
+        this.loadChatHistory();
     }
 
     bindEvents() {
         this.payButton.addEventListener('click', () => this.handlePayment());
         this.toggleButton.addEventListener('click', () => this.toggleVoiceListening());
         this.testButton.addEventListener('click', () => this.testVoiceRecognition());
+        // Chatbot send
+        this.sendChatBtn.addEventListener('click', () => this.handleSendChat());
+        this.chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') this.handleSendChat();
+        });
+        // Remove runtime.onMessage listener for showAIAnswer
     }
 
     async checkStatus() {
@@ -31,6 +44,7 @@ class PopupHandler {
     }
 
     updateStatus(isPaid) {
+        this.isPaid = isPaid;
         if (isPaid) {
             this.statusContainer.className = 'status paid';
             this.statusContainer.innerHTML = `
@@ -153,17 +167,63 @@ class PopupHandler {
             this.showError('Error testing voice recognition');
         }
     }
+
+    // Add chat message to chatContainer
+    addChatMessage(sender, text) {
+        const msgDiv = document.createElement('div');
+        msgDiv.style.margin = '8px 0';
+        msgDiv.style.whiteSpace = 'pre-wrap';
+        if (sender === 'user') {
+            msgDiv.style.textAlign = 'right';
+            msgDiv.style.color = '#2b6cb0';
+            msgDiv.textContent = 'You: ' + text;
+        } else {
+            msgDiv.style.textAlign = 'left';
+            msgDiv.style.color = '#222';
+            msgDiv.textContent = 'AI: ' + text;
+        }
+        this.chatContainer.appendChild(msgDiv);
+        this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+    }
+
+    // Handle sending chat question
+    handleSendChat() {
+        const question = this.chatInput.value.trim();
+        if (!question) return;
+        if (!this.isPaid) {
+            this.showError('Please complete payment to use the chatbot.');
+            return;
+        }
+        this.addChatMessage('user', question);
+        this.chatInput.value = '';
+        // Send to service worker for processing
+        chrome.runtime.sendMessage({
+            action: 'processVoiceInput',
+            transcript: question
+        });
+    }
+
+    // Load and display chat history
+    loadChatHistory() {
+        chrome.storage.local.get({ chatHistory: [] }, (result) => {
+            this.chatContainer.innerHTML = '';
+            for (const msg of result.chatHistory) {
+                if (msg.question) this.addChatMessage('user', msg.question);
+                if (msg.answer) this.addChatMessage('ai', msg.answer);
+            }
+        });
+    }
 }
 
 // Initialize popup when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new PopupHandler();
-});
-
-// Listen for storage changes to update status
-chrome.storage.onChanged.addListener((changes, namespace) => {
-    if (namespace === 'local' && changes.paid) {
-        // Reload popup to reflect changes
-        window.location.reload();
-    }
+    const handler = new PopupHandler();
+    chrome.storage.onChanged.addListener((changes, namespace) => {
+        if (namespace === 'local' && changes.chatHistory) {
+            handler.loadChatHistory();
+        }
+        if (namespace === 'local' && changes.paid) {
+            window.location.reload();
+        }
+    });
 }); 

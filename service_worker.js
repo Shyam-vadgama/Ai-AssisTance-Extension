@@ -144,7 +144,7 @@ function toggleVoiceListening(tabId) {
     // Update icon to show listening state
     try {
       chrome.action.setIcon({
-        path: isListening ? 'icons/icon-active.svg' : 'icons/icon.svg'
+        path: 'icons/icon48.png'
       });
     } catch (error) {
       console.log('Icon update skipped - using default icon');
@@ -323,6 +323,16 @@ async function processQuestion(question) {
     
     const answer = data.candidates[0].content.parts[0].text;
     
+    // Always log the answer to the console
+    console.log('AI Answer:', answer);
+    
+    // Save the question and answer to chatHistory in chrome.storage.local
+    chrome.storage.local.get({ chatHistory: [] }, (result) => {
+      const chatHistory = result.chatHistory;
+      chatHistory.push({ question, answer });
+      chrome.storage.local.set({ chatHistory });
+    });
+    
     // Copy answer to clipboard
     await copyToClipboard(answer);
     console.log('Answer copied to clipboard:', answer);
@@ -362,18 +372,11 @@ async function copyToClipboard(text) {
       console.log('Copy request sent to content script');
     } else {
       console.error('No active tab found for clipboard copy');
-      throw new Error('No active tab found');
+      showNotification('❌ No active tab found for clipboard copy', 'error');
     }
   } catch (error) {
     console.error('Failed to send copy request:', error);
-    // Try direct clipboard API as fallback
-    try {
-      await navigator.clipboard.writeText(text);
-      console.log('Text copied using direct clipboard API');
-    } catch (clipboardError) {
-      console.error('Direct clipboard API failed:', clipboardError);
-      throw clipboardError;
-    }
+    showNotification('❌ Failed to send copy request', 'error');
   }
 }
 

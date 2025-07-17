@@ -28,7 +28,7 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Stealth AI Interview Assistant"
+    "default_title": "Stealth AI Interview Assistant" 
   },
   "commands": {
     "_execute_action": {
