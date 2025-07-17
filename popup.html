@@ -10,6 +10,8 @@
             padding: 20px;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             margin: 0;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 60%, #2c5364 100%);
+            min-height: 100vh;
         }
         
         .header {
@@ -18,54 +20,66 @@
         }
         
         .logo {
-            font-size: 32px;
+            font-size: 36px;
             margin-bottom: 10px;
+            background: linear-gradient(90deg, #00c6ff, #0072ff, #43cea2, #185a9d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         h1 {
-            font-size: 18px;
-            color: #2d3748;
+            font-size: 20px;
+            color: #e0e6ed;
             margin: 0 0 5px 0;
+            letter-spacing: 1px;
         }
         
         .subtitle {
-            color: #718096;
-            font-size: 12px;
+            color: #43cea2;
+            font-size: 13px;
             margin: 0;
+            font-weight: 600;
         }
         
         .status {
-            background: #f7fafc;
+            background: linear-gradient(90deg, #232b3e 60%, #203a43 100%);
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 10px;
             margin-bottom: 20px;
             text-align: center;
+            box-shadow: 0 2px 8px #0004;
+            border: 1.5px solid #22304a;
         }
         
         .status.paid {
-            background: #f0fff4;
-            border: 1px solid #9ae6b4;
+            background: linear-gradient(90deg, #1e3c72 60%, #2a5298 100%);
+            border: 1.5px solid #43cea2;
         }
         
         .status.unpaid {
-            background: #fff5f5;
-            border: 1px solid #feb2b2;
+            background: linear-gradient(90deg, #3a1c71 60%, #d76d77 100%);
+            border: 1.5px solid #ff5858;
         }
         
         .status-icon {
-            font-size: 24px;
+            font-size: 28px;
             margin-bottom: 8px;
         }
         
         .status-text {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 700;
             margin-bottom: 5px;
+            color: #ff5858;
+        }
+        .status.paid .status-text {
+            color: #43cea2;
         }
         
         .status-desc {
             font-size: 12px;
-            color: #718096;
+            color: #b0b8c1;
         }
         
         .controls {
@@ -77,29 +91,36 @@
         .btn {
             padding: 10px 16px;
             border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 600;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(.4,2,.6,1);
+            box-shadow: 0 2px 8px #0002;
         }
         
         .btn-primary {
-            background: #667eea;
-            color: white;
+            background: linear-gradient(90deg, #0072ff, #00c6ff);
+            color: #fff;
         }
         
         .btn-primary:hover {
-            background: #5a67d8;
+            background: linear-gradient(90deg, #43cea2, #185a9d);
+            color: #fff;
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 4px 16px #43cea244;
         }
         
         .btn-secondary {
-            background: #e2e8f0;
-            color: #4a5568;
+            background: linear-gradient(90deg, #232b3e, #2c5364);
+            color: #e0e6ed;
         }
         
         .btn-secondary:hover {
-            background: #cbd5e0;
+            background: linear-gradient(90deg, #43cea2, #232b3e);
+            color: #fff;
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 4px 16px #43cea244;
         }
         
         .btn:disabled {
@@ -108,20 +129,73 @@
         }
         
         .shortcut-info {
-            background: #edf2f7;
+            background: linear-gradient(90deg, #232b3e 60%, #203a43 100%);
             padding: 10px;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 12px;
-            color: #4a5568;
+            color: #b0b8c1;
             text-align: center;
+            margin-top: 18px;
+            box-shadow: 0 2px 8px #0002;
         }
         
         .shortcut-key {
-            background: #cbd5e0;
-            padding: 2px 6px;
-            border-radius: 3px;
+            background: #22304a;
+            color: #43cea2;
+            padding: 2px 8px;
+            border-radius: 4px;
             font-family: monospace;
             font-weight: bold;
+            margin: 0 2px;
+        }
+        
+        #chatContainer {
+            margin-top: 20px;
+            max-height: 220px;
+            overflow-y: auto;
+            background: linear-gradient(90deg, #232b3e 60%, #2c5364 100%);
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 14px;
+            border: 1.5px solid #22304a;
+            box-shadow: 0 2px 8px #0002;
+            color: #e0e6ed;
+        }
+        #chatInputArea {
+            display: flex;
+            margin-top: 10px;
+            gap: 5px;
+        }
+        #chatInput {
+            flex: 1;
+            padding: 9px;
+            border-radius: 8px;
+            border: 1.5px solid #22304a;
+            font-size: 14px;
+            background: #1a2233;
+            color: #e0e6ed;
+            transition: border-color 0.2s;
+        }
+        #chatInput:focus {
+            border-color: #43cea2;
+            outline: none;
+        }
+        #sendChatBtn {
+            padding: 9px 14px;
+        }
+        .btn-danger {
+            background: linear-gradient(90deg, #ff5858, #d76d77);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: linear-gradient(90deg, #d76d77, #ff5858);
+            color: #fff;
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 4px 16px #ff585844;
+        }
+        .btn-danger:active {
+            background: #ff5858;
+            color: #fff;
         }
     </style>
 </head>
@@ -130,6 +204,12 @@
         <div class="logo">🤖</div>
         <h1>Stealth AI Assistant</h1>
         <p class="subtitle">Gemini Pro Edition</p>
+    </div>
+
+    <!-- Loader overlay for when interviewer is speaking -->
+    <div id="interviewLoader" class="loader-overlay" style="display:none;">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Listening to interviewer...</div>
     </div>
 
     <div id="statusContainer" class="status unpaid">
@@ -145,11 +225,12 @@
     </div>
 
     <!-- Chatbot UI -->
-    <div id="chatContainer" style="margin-top:20px; max-height:220px; overflow-y:auto; background:#f7fafc; border-radius:8px; padding:10px; font-size:14px; border:1px solid #e2e8f0;"></div>
+    <div id="chatContainer" style="margin-top:20px; max-height:220px; overflow-y:auto; background:#232b3e; border-radius:8px; padding:10px; font-size:14px; border:1.5px solid #22304a;"></div>
     <div id="chatInputArea" style="display:flex; margin-top:10px; gap:5px;">
-        <input id="chatInput" type="text" placeholder="Type your question..." style="flex:1; padding:8px; border-radius:6px; border:1px solid #cbd5e0; font-size:14px;" />
+        <input id="chatInput" type="text" placeholder="Type your question..." style="flex:1; padding:8px; border-radius:6px; border:1.5px solid #22304a; font-size:14px; background:#1a2233; color:#e0e6ed;" />
         <button id="sendChatBtn" class="btn btn-primary" style="padding:8px 12px;">Send</button>
     </div>
+    <button id="clearHistoryBtn" class="btn btn-danger" style="width:100%; margin-top:10px; background:linear-gradient(90deg,#ff5858,#d76d77); color:#fff;">Clear History</button>
 
     <div class="shortcut-info">
         <div>Keyboard Shortcuts:</div>
@@ -159,5 +240,47 @@
     </div>
 
     <script src="popup.js"></script>
+    <style>
+    /* Loader overlay styles */
+    .loader-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(20, 30, 48, 0.85);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        animation: fadeIn 0.3s;
+    }
+    .loader-spinner {
+        width: 48px;
+        height: 48px;
+        border: 5px solid #22304a;
+        border-top: 5px solid #43cea2;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 18px;
+    }
+    .loader-text {
+        color: #e0e6ed;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-align: center;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    </style>
 </body>
 </html> 

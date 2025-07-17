@@ -17,6 +17,8 @@ class PopupHandler {
         this.chatInput = document.getElementById('chatInput');
         this.sendChatBtn = document.getElementById('sendChatBtn');
         this.isPaid = false;
+        // Loader overlay
+        this.interviewLoader = document.getElementById('interviewLoader');
         // Load chat history
         this.loadChatHistory();
     }
@@ -30,7 +32,11 @@ class PopupHandler {
         this.chatInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') this.handleSendChat();
         });
-        // Remove runtime.onMessage listener for showAIAnswer
+        // Clear history
+        const clearBtn = document.getElementById('clearHistoryBtn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => this.clearChatHistory());
+        }
     }
 
     async checkStatus() {
@@ -168,6 +174,17 @@ class PopupHandler {
         }
     }
 
+    showInterviewLoader() {
+        if (this.interviewLoader) {
+            this.interviewLoader.style.display = 'flex';
+        }
+    }
+    hideInterviewLoader() {
+        if (this.interviewLoader) {
+            this.interviewLoader.style.display = 'none';
+        }
+    }
+
     // Add chat message to chatContainer
     addChatMessage(sender, text) {
         const msgDiv = document.createElement('div');
@@ -179,7 +196,7 @@ class PopupHandler {
             msgDiv.textContent = 'You: ' + text;
         } else {
             msgDiv.style.textAlign = 'left';
-            msgDiv.style.color = '#222';
+            msgDiv.style.color = '#fff'; // White for AI answers
             msgDiv.textContent = 'AI: ' + text;
         }
         this.chatContainer.appendChild(msgDiv);
@@ -213,6 +230,12 @@ class PopupHandler {
             }
         });
     }
+
+    clearChatHistory() {
+        chrome.storage.local.set({ chatHistory: [] }, () => {
+            this.chatContainer.innerHTML = '';
+        });
+    }
 }
 
 // Initialize popup when DOM is loaded
@@ -224,6 +247,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (namespace === 'local' && changes.paid) {
             window.location.reload();
+        }
+    });
+    // Listen for interviewer speaking events
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        if (message.action === 'interviewerSpeaking') {
+            handler.showInterviewLoader();
+        } else if (message.action === 'interviewerSilent') {
+            handler.hideInterviewLoader();
         }
     });
 }); 
